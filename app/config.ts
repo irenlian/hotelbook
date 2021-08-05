@@ -11,4 +11,4 @@ export const database = {
 
 export const domain = process.env.DOMAIN;
 
-export const port = 8000;
+export const port = process.env.PORT || 5000;
