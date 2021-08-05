@@ -2,11 +2,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { errors as joiErrors } from 'celebrate';
 import cors from 'cors';
-// import { initDB } from './common/db';
+import { initDB } from './db/init';
 // import tenantRoutes from './routes/tenantRoutes';
 import { domain } from './config';
 
-// initDB();
+initDB();
 const app = express();
 
 const whitelist = [`${domain}`, 'http://localhost:3000'];
