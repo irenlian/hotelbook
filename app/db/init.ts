@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 
-let pool = null;
+let pool: Pool | null = null;
 
 export const initDB = () => {
   pool = new Pool({
