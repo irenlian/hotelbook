@@ -1,7 +1,8 @@
-import app from '~/app';
+import express from "express";
 import { getUser } from '~/db/users';
 
-app.get('/db', async (req, res) => {
+const router = express.Router();
+router.get('/db', async (req, res) => {
   console.log('Accessing /db');
   try {
     res.send(await getUser());
@@ -10,3 +11,5 @@ app.get('/db', async (req, res) => {
     res.send('Error ' + err);
   }
 });
+
+export default router;
