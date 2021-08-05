@@ -1,5 +1,5 @@
 import express from "express";
-import { getUser } from '~/db/users';
+import { getUser } from '../db/users';
 
 const router = express.Router();
 router.get('/db', async (req, res) => {

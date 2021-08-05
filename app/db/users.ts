@@ -1,4 +1,4 @@
-import pool from "~/db/init";
+import pool from "./init";
 
 export const getUser = async () => {
   if (!pool) throw new Error('No database connection');
