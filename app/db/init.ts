@@ -5,7 +5,7 @@ const pool = new Pool(database);
 
 type DBFunction = (client: PoolClient) => Promise<any>;
 
-export const dbQuery = (callback: DBFunction) => async () => {
+export const dbQuery = async (callback: DBFunction) => {
   if (!pool) throw new Error('No database connection');
   const client = await pool.connect();
   const result = await callback(client);

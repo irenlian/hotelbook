@@ -1,14 +1,8 @@
-import express from "express";
-import { getUsers } from '../db/users';
+import express from 'express';
+import { getAllUsersController, getUserController } from '../controllers/users';
 
 const router = express.Router();
-router.get('/db', async (req, res) => {
-  try {
-    res.send(await getUsers());
-  } catch (err) {
-    console.error(err);
-    res.send('Error ' + err);
-  }
-});
+router.get('/users', getAllUsersController);
+router.get('/users/:id', getUserController);
 
 export default router;
