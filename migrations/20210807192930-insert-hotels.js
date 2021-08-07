@@ -15,13 +15,13 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.runSql("INSERT INTO users (id, name, email) VALUES " +
-      "(1, 'Antonio', 'anton@gmail.com'), " +
-      "(2, 'Cassandra', 'cas@gmail.com');");
+  return db.runSql("INSERT INTO hotels (id, name, country, city) VALUES " +
+      "(1, 'Malyatko', 'Ukraine', 'Kyiv'), " +
+      "(2, 'Valentino', 'Spain', 'Valencia');");
 };
 
 exports.down = function(db) {
-  return db.runSql("DELETE FROM users WHERE id IN (1, 2);");
+  return db.runSql("DELETE FROM hotels WHERE id IN (1, 2);");
 };
 
 exports._meta = {

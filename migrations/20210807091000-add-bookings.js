@@ -45,8 +45,6 @@ exports.up = function(db) {
     },
     check_in: 'date',
     check_out: 'date',
-    created_at: 'timestamp',
-    updated_at: 'timestamp',
   });
 };
 
