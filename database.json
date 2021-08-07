@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "overwrite": {
+      "driver": "pg",
+      "ssl": {
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}

@@ -10,6 +10,8 @@
     "dev": "nodemon app/index.ts",
     "start": "node dist/index.js",
     "build": "tsc",
+    "migrate": "db-migrate up",
+    "migrate:down": "db-migrate down",
     "lint": "eslint ./app --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint ./app --ext .js,.jsx,.ts,.tsx --fix",
     "test": "echo \"No test specified\""
@@ -22,6 +24,8 @@
     "body-parser": "^1.19.0",
     "celebrate": "^15.0.0",
     "cors": "^2.8.5",
+    "db-migrate": "^0.11.12",
+    "db-migrate-pg": "^1.2.2",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "joi": "^17.4.2",

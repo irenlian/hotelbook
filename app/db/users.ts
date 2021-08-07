@@ -1,9 +1,5 @@
-import pool from "./init";
+import { dbQuery } from './init';
 
-export const getUser = async () => {
-  if (!pool) throw new Error('No database connection');
-  const client = await pool.connect();
-  const result = await client.query('SELECT * FROM test_table');
-  client.release();
-  return result;
-}
+export const getUser = dbQuery(async client => {
+  return client.query('SELECT * FROM users');
+});
