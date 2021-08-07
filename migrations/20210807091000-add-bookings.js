@@ -15,8 +15,6 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  console.log('Creating bookings');
-
   return db.createTable('bookings', {
     id: { type: 'int', primaryKey: true, autoIncrement: true, notNull: true },
     user_id: {
@@ -53,8 +51,6 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  console.log('Removing bookings');
-
   return db.dropTable('bookings');
 };
 

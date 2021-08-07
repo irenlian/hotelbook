@@ -15,18 +15,13 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('hotels', {
-    id: { type: 'int', primaryKey: true, autoIncrement: true, notNull: true },
-    name: 'string',
-    country: 'string',
-    city: 'string',
-  });
+  return db.runSql("INSERT INTO users (id, name, email) VALUES (1, 'Antonio', 'anton@gmail.com'), (2, 'Cassandra', 'cas@gmail.com');");
 };
 
 exports.down = function(db) {
-  return db.dropTable('hotels');
+  return db.runSql("DELETE FROM users WHERE id IN (1, 2);");
 };
 
 exports._meta = {
-  "version": 2
+  "version": 1
 };

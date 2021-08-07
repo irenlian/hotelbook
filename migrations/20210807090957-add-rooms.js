@@ -15,8 +15,6 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  console.log('Creating rooms');
-
   return db.createTable('rooms', {
     id: { type: 'int', primaryKey: true, autoIncrement: true, notNull: true },
     hotel_id: {
@@ -39,8 +37,6 @@ exports.up = function (db) {
 };
 
 exports.down = function (db) {
-  console.log('Removing rooms');
-
   return db.dropTable('rooms');
 };
 
