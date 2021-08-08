@@ -1,5 +1,5 @@
 import { getAllUsers, getUser } from '../db/users';
-import { addBooking } from '../db/bookings';
+import {addBooking, getUserBookings} from '../db/bookings';
 
 type UserType = {
   id: number;
@@ -18,12 +18,18 @@ export default class User {
     this.email = email;
   }
 
-  async getUser(): Promise<UserType> {
-    if (this.name && this.email) {
-      return { id: this.id, name: this.name, email: this.email };
+  async getUser(): Promise<User> {
+    if (!this.email) {
+      const result = await getUser(this.id);
+      this.email = result.email;
+      this.name = result.name;
     }
-    const result = await getUser(this.id);
-    return result.rows[0];
+    return this;
+  }
+
+  async getBookings(): Promise<any> {
+    const result = await getUserBookings(this.id);
+    return result.rows;
   }
 
   async bookRoom({ roomId, checkIn, checkOut }: { roomId: number; checkIn: string; checkOut: string }) {

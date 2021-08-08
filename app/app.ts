@@ -5,7 +5,7 @@ import { errors as joiErrors } from 'celebrate';
 import cors from 'cors';
 import initRoutes from './routes';
 import { domain } from './config';
-import errorHandling from "~/middlewares/errorHandling";
+import errorHandling from "./middlewares/errorHandling";
 
 const app = express();
 

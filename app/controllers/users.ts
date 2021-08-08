@@ -9,3 +9,8 @@ export const getUserController = async (req: express.Request, res: express.Respo
   const user = new User(parseInt(req.params.id, 10));
   res.send(await user.getUser());
 };
+
+export const getUserBookingsController = async (req: express.Request, res: express.Response) => {
+  const user = new User(parseInt(req.params.id, 10));
+  res.send(await user.getBookings());
+};

@@ -1,5 +1,8 @@
-import Room from '~/models/room';
-import { getAllHotels, getHotel } from '~/db/hotels';
+import Room from './room';
+import { getAllHotels, getHotel } from '../db/hotels';
+import { getHotelRooms } from '../db/rooms';
+import Booking from '../models/booking';
+import { getHotelBookings } from '../db/bookings';
 
 export type HotelType = {
   id: number;
@@ -10,7 +13,8 @@ export type HotelType = {
 
 export default class Hotel {
   id: number;
-  rooms: Room[] | null;
+  rooms?: Room[];
+  bookings?: Booking[];
   name?: string;
   country?: string;
   city?: string;
@@ -20,15 +24,27 @@ export default class Hotel {
     this.name = name;
     this.country = country;
     this.city = city;
-    this.rooms = null;
   }
 
-  async getHotel(): Promise<HotelType> {
-    if (this.name && this.country && this.city) {
-      return { id: this.id, name: this.name, country: this.country, city: this.city };
+  async getHotel(): Promise<Hotel> {
+    if (!this.name) {
+      const result = await getHotel(this.id);
+      this.name = result.rows[0].name;
+      this.country = result.rows[0].country;
+      this.city = result.rows[0].city;
     }
-    const result = await getHotel(this.id);
-    return result.rows[0];
+    if (!this.rooms) {
+      this.rooms = (await getHotelRooms(this.id)).rows;
+    }
+    return this;
+  }
+
+  async getBookings(): Promise<Booking[] | undefined> {
+    if (!this.bookings) {
+      const result = await getHotelBookings(this.id);
+      this.bookings = result.rows;
+    }
+    return this.bookings;
   }
 
   static async getAll() {
