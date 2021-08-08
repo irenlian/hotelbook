@@ -5,6 +5,7 @@ import { errors as joiErrors } from 'celebrate';
 import cors from 'cors';
 import initRoutes from './routes';
 import { domain } from './config';
+import errorHandling from "~/middlewares/errorHandling";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(cors(options));
 
 app.use(bodyParser.json());
 
+app.use(errorHandling);
 initRoutes(app);
 app.get('/', (req, res) => res.send('Hello world'));
 
