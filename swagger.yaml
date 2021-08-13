@@ -1,0 +1,24 @@
+---
+openapi: 3.0.0
+info:
+  title: Swagger Hotelbook
+  description: |
+    This is a Hotelbook server API.
+  contact:
+    email: ilian@star.global
+  version: 1.0.0-oas3
+servers:
+- url: /
+tags:
+- name: test
+  description: Test routes
+paths:
+  /:
+    get:
+      tags:
+      - test
+      summary: Test connection
+      responses:
+        "200":
+          description: Hello World
+components: {}
