@@ -2,9 +2,9 @@ import express from 'express';
 import { createBookingController, getAllHotelsController, getHotelController, getHotelBookingsController } from '../controllers/hotels';
 
 const router = express.Router();
-router.get('/hotels', getAllHotelsController);
-router.get('/hotels/:id', getHotelController);
-router.get('/hotels/:id/bookings', getHotelBookingsController);
-router.put('/hotels/rooms/:id/bookings', createBookingController);
+router.get('/hotel', getAllHotelsController);
+router.get('/hotel/:id', getHotelController);
+router.get('/hotel/:id/booking', getHotelBookingsController);
+router.put('/hotel/room/:id/booking', createBookingController);
 
 export default router;
