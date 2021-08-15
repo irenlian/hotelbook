@@ -19,6 +19,7 @@ exports.up = function(db) {
     id: { type: 'int', primaryKey: true, autoIncrement: true, notNull: true },
     name: 'string',
     email: 'string',
+    password: 'string',
   });
 };
 

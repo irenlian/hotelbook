@@ -8,5 +8,6 @@ export const database = {
 };
 
 export const domain = process.env.DOMAIN;
+export const JWT = process.env.ACCESS_JWT_SECRET || 'secret';
 
 export const port = process.env.PORT || 5000;

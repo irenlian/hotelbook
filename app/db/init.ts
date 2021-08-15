@@ -3,14 +3,12 @@ import { database } from '../config';
 
 const pool = new Pool(database);
 
-type DBFunction = (client: PoolClient) => Promise<any>;
-
-export const dbQuery = async (callback: DBFunction) => {
+export const dbQuery = async (queryString: string) => {
   if (!pool) throw new Error('No database connection');
   const client = await pool.connect();
-  const result = await callback(client);
+  const result = await client.query(queryString);
   client.release();
   return result;
-};
+}
 
 export default pool;
