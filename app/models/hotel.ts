@@ -1,5 +1,5 @@
 import Room from './room';
-import { getAllHotels, getHotel } from '../db/hotels';
+import { getHotels, getHotel } from '../db/hotels';
 import { getHotelRooms } from '../db/rooms';
 import Booking from '../models/booking';
 import { getHotelBookings } from '../db/bookings';
@@ -9,6 +9,13 @@ export type HotelType = {
   name: string;
   country: string;
   city: string;
+};
+
+export type FiltersType = {
+  from: string;
+  to: string;
+  minPrice: number;
+  maxPrice: number;
 };
 
 export default class Hotel {
@@ -47,8 +54,9 @@ export default class Hotel {
     return this.bookings;
   }
 
-  static async getAll() {
-    const result = await getAllHotels();
+  static async getAll(filters: FiltersType) {
+    console.log(filters);
+    const result = await getHotels(filters);
     return result.rows;
   }
 }

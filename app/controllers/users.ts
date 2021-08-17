@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
-import {JWT} from "~/config";
+import { JWT } from '../config';
 
 export const postUsers = async (req: express.Request, res: express.Response) => {
   const { name, email, password } = req.body;
@@ -10,13 +10,13 @@ export const postUsers = async (req: express.Request, res: express.Response) => 
     res.statusCode = 400;
   }
   res.send({ validation: { body: { message: result } } });
-}
+};
 
 export const login = async (req: express.Request, res: express.Response) => {
   const { email, password } = req.body;
 
   const user = new User({ email, password });
-  if (!await user.verifyUser()) {
+  if (!(await user.verifyUser())) {
     res.statusCode = 404;
   }
   const accessToken = jwt.sign({ email }, JWT, {
@@ -25,7 +25,7 @@ export const login = async (req: express.Request, res: express.Response) => {
 
   res.set('Jwt-Authorization', accessToken);
   res.sendStatus(200);
-}
+};
 
 export const getAllUsersController = async (req: express.Request, res: express.Response) => {
   res.send(await User.getAll());

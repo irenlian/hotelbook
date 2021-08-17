@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { getAllUsers, getUser, getUserByEmail, insertUser } from '../db/users';
 import { addBooking, getUserBookings } from '../db/bookings';
 import jwt from 'jsonwebtoken';
-import { JWT } from '~/config';
+import { JWT } from '../config';
 
 type UserType = {
   id?: number;
@@ -29,7 +29,8 @@ export default class User {
       const check = await getUserByEmail(user.email);
       if (check) return 'username already exists';
 
-      const result = await insertUser(user.name, user.email, user.password);
+      const hashedPassword = await bcrypt.hash(user.password, 8);
+      const result = await insertUser(user.name, user.email, hashedPassword);
       return result;
     }
     return null;

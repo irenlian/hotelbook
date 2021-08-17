@@ -1,6 +1,6 @@
 import express from 'express';
 import { getAllUsersController, getUserBookingsController, getUserController, postUsers, login } from '../controllers/users';
-import authenticate from "~/middlewares/authenticate";
+import authenticate from "../middlewares/authenticate";
 
 const router = express.Router();
 router.post('/user/signup', postUsers);

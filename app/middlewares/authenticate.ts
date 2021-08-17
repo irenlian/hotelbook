@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { JWT } from '~/config';
+import { JWT } from '../config';
 
 export default async (req: express.Request, res: express.Response, next: Function): Promise<express.Response | void> => {
   try {
