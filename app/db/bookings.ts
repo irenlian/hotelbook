@@ -11,5 +11,6 @@ export const getUserBookings = (id: number) =>
 
 export const addBooking = (booking: Omit<BookingType, 'id'>) =>
   dbQuery(
-    `INSERT INTO bookings (user_id, room_id, check_in, check_out) VALUES (${booking.userId}, ${booking.roomId}, ${booking.checkIn}, ${booking.checkOut})`,
+    `INSERT INTO bookings (user_id, room_id, check_in, check_out) 
+    VALUES (${booking.userId}, ${booking.roomId}, CAST('${booking.checkIn}' AS DATE), CAST('${booking.checkOut}' AS DATE))`,
   );

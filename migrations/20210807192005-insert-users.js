@@ -15,9 +15,9 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.runSql("INSERT INTO users (id, name, email) VALUES " +
-      "(1, 'Antonio', 'anton@gmail.com'), " +
-      "(2, 'Cassandra', 'cas@gmail.com');");
+  return db.runSql("INSERT INTO users (name, email) VALUES " +
+      "('Antonio', 'anton@gmail.com'), " +
+      "('Cassandra', 'cas@gmail.com');");
 };
 
 exports.down = function(db) {

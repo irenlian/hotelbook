@@ -13,8 +13,7 @@ export default async (req: express.Request, res: express.Response, next: Functio
     } catch (e) {
       return res.sendStatus(401);
     }
-    next();
-    return next();
+    return await next();
   } catch (err) {
     console.error(err);
     res.send('Error ' + err);

@@ -193,7 +193,6 @@ paths:
             schema:
               $ref: '#/components/schemas/BookingInput'
             example:
-              roomId: 1
               checkIn: 2020-04-05
               checkOut: 2020-04-09
         required: true
@@ -280,9 +279,6 @@ components:
     BookingInput:
       type: object
       properties:
-        roomId:
-          type: integer
-          format: int64
         checkIn:
           type: string
           format: date

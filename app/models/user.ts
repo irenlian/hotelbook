@@ -24,21 +24,23 @@ export default class User {
     this.password = password;
   }
 
-  static async addUser(user: UserType) {
+  static async addUser(user: UserType): Promise<string> {
     if (user.email && user.name && user.password) {
       const check = await getUserByEmail(user.email);
-      if (check) return 'username already exists';
+      if (check.rows.length) return 'username already exists';
 
       const hashedPassword = await bcrypt.hash(user.password, 8);
       const result = await insertUser(user.name, user.email, hashedPassword);
-      return result;
+
+      return result.rowCount ? 'success' : 'failed';
     }
-    return null;
+    return 'invalid input';
   }
 
   async verifyUser(): Promise<boolean> {
     if (!this.email || !this.password) return false;
-    const user: any = await getUserByEmail(this.email);
+    const result: any = await getUserByEmail(this.email);
+    const user = result.rows.length && result.rows[0];
     if (user) {
       return await bcrypt.compare(this.password, user.password);
     }
@@ -63,7 +65,8 @@ export default class User {
 
   async bookRoom({ roomId, checkIn, checkOut }: { roomId: number; checkIn: string; checkOut: string }) {
     if (this.id) {
-      return addBooking({ userId: this.id, roomId, checkIn, checkOut });
+      const result = await addBooking({ userId: this.id, roomId, checkIn, checkOut });
+      return !!result.rowCount;
     }
   }
 
@@ -76,7 +79,8 @@ export default class User {
     if (token) {
       const { email }: any = jwt.verify(token, JWT);
       if (email) {
-        const user: any = await getUserByEmail(email);
+        const result: any = await getUserByEmail(email);
+        const user = result.rows.length && result.rows[0];
         if (user) {
           return new User({ id: user.id, email: user.email, name: user.name });
         }

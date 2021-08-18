@@ -15,11 +15,11 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.runSql("INSERT INTO bookings (id, user_id, room_id, check_in, check_out) VALUES " +
-      "(1, 1, 1, '2020-04-20', '2020-04-25'), " +
-      "(2, 1, 3, '2020-05-10', '2020-06-15'), " +
-      "(3, 2, 2, '2021-01-21', '2020-01-23'), " +
-      "(4, 2, 2, '2021-03-04', '2021-03-09');");
+  return db.runSql("INSERT INTO bookings (user_id, room_id, check_in, check_out) VALUES " +
+      "(1, 1, '2020-04-20', '2020-04-25'), " +
+      "(1, 3, '2020-05-10', '2020-06-15'), " +
+      "(2, 2, '2021-01-21', '2020-01-23'), " +
+      "(2, 2, '2021-03-04', '2021-03-09');");
 };
 
 exports.down = function(db) {

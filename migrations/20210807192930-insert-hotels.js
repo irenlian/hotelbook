@@ -15,9 +15,9 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.runSql("INSERT INTO hotels (id, name, country, city) VALUES " +
-      "(1, 'Malyatko', 'Ukraine', 'Kyiv'), " +
-      "(2, 'Valentino', 'Spain', 'Valencia');");
+  return db.runSql("INSERT INTO hotels (name, country, city) VALUES " +
+      "('Malyatko', 'Ukraine', 'Kyiv'), " +
+      "('Valentino', 'Spain', 'Valencia');");
 };
 
 exports.down = function(db) {

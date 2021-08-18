@@ -6,7 +6,7 @@ import { JWT } from '../config';
 export const postUsers = async (req: express.Request, res: express.Response) => {
   const { name, email, password } = req.body;
   const result = await User.addUser({ name, email, password });
-  if (result === 'username already exists') {
+  if (result === 'username already exists' || result === 'invalid input') {
     res.statusCode = 400;
   }
   res.send({ validation: { body: { message: result } } });

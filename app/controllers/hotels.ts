@@ -20,8 +20,18 @@ export const getHotelBookingsController = async (req: express.Request, res: expr
 
 export const createBookingController = async (req: express.Request, res: express.Response) => {
   const token = req.header('Jwt-Authorization') as string;
-  const user = await User.getUserByToken(token);
-  if (!user) return res.sendStatus(400);
+  const roomId = parseInt(req.params.id, 10);
 
-  res.send(await user.bookRoom({ roomId: req.body.roomId, checkIn: req.body.checkIn, checkOut: req.body.checkOut }));
+  const user = await User.getUserByToken(token);
+  if (!user) {
+    return res.sendStatus(401);
+  }
+
+  const result = await user.bookRoom({
+    roomId,
+    checkIn: req.body.checkIn,
+    checkOut: req.body.checkOut,
+  });
+  if (!result) return res.sendStatus(400);
+  return res.sendStatus(200);
 };
