@@ -1,7 +1,7 @@
 import { dbQuery } from '../db/init';
 import { FiltersType } from '../models/hotel';
 
-export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit }: FiltersType) => {
+export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort }: FiltersType) => {
   let query = '';
   if (from && to) {
     query = `
@@ -46,10 +46,17 @@ export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit }: Filte
     `;
   }
   const wrapped = `
-    SELECT * 
+    SELECT hotels.id, hotels.name, hotels.country, hotels.city 
     FROM hotels
+    JOIN
+    (
+      SELECT distinct rooms.hotel_id, MIN(rooms.price) OVER (PARTITION BY rooms.hotel_id) AS min_price
+      FROM rooms
+    ) AS rooms_with_price
+    ON hotels.id = rooms_with_price.hotel_id
     WHERE id IN
     (${query})
+    ORDER BY rooms_with_price.min_price ${sort === 'ASC' ? 'ASC' : 'DESC'}
     LIMIT $1
     OFFSET $2
   `;

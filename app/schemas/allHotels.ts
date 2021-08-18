@@ -6,6 +6,7 @@ export default {
     .keys({
       offset: Joi.number().integer().optional().default(0),
       limit: Joi.number().integer().optional().default(20),
+      sort: Joi.string().valid("ASC", "DESC").optional().default('ASC'),
       from: Joi.date().greater('now').optional(),
       to: Joi.date().greater(Joi.ref('from')).optional(),
       minPrice: Joi.number().integer().positive().optional(),

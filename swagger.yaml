@@ -149,6 +149,15 @@ paths:
           schema:
             type: integer
             default: 0
+        - name: sort
+          in: query
+          description: Sort by minimum price in ascending or descending order
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            default: ASC
       responses:
         "200":
           description: successful operation

@@ -18,6 +18,7 @@ export type FiltersType = {
   maxPrice: number;
   offset: number;
   limit: number;
+  sort: 'ASC' | 'DESC';
 };
 
 export default class Hotel {
