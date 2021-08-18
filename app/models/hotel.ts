@@ -16,6 +16,8 @@ export type FiltersType = {
   to: string;
   minPrice: number;
   maxPrice: number;
+  offset: number;
+  limit: number;
 };
 
 export default class Hotel {
@@ -55,7 +57,6 @@ export default class Hotel {
   }
 
   static async getAll(filters: FiltersType) {
-    console.log(filters);
     const result = await getHotels(filters);
     return result.rows;
   }

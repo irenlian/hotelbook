@@ -1,0 +1,16 @@
+import { Joi, Segments } from 'celebrate';
+
+export default {
+  [Segments.QUERY]: Joi.object()
+    .required()
+    .keys({
+      offset: Joi.number().integer().optional().default(0),
+      limit: Joi.number().integer().optional().default(20),
+      from: Joi.date().greater('now').optional(),
+      to: Joi.date().greater(Joi.ref('from')).optional(),
+      minPrice: Joi.number().integer().positive().optional(),
+      maxPrice: Joi.number().integer().positive().greater(Joi.ref('minPrice')).optional(),
+    })
+    .with('from', 'to')
+    .with('to', 'from')
+};

@@ -1,10 +1,10 @@
-import express from "express";
+import { NextFunction, Request, Response } from 'express';
 
-export default async (req: express.Request, res: express.Response, next: Function): Promise<void> => {
-  try {
-    await next();
-  } catch (err) {
-    console.error(err);
-    res.send('Error ' + err);
-  }
+export default async (error: Error, request: Request, response: Response, next: NextFunction) => {
+  const status = 500;
+  const message = error.message || 'Something went wrong';
+  response.status(status).send({
+    status,
+    message,
+  });
 };

@@ -131,6 +131,24 @@ paths:
           explode: true
           schema:
             type: integer
+        - name: limit
+          in: query
+          description: How many hotels should be displayed on the page. I.e. limit=20 means that query will return maximum 20 hotels starting from the offset index.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          description: From which index should pagination start. I.e. offset=20 means that will be returned 20th, 21th, 22th... hotels from the full list
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+            default: 0
       responses:
         "200":
           description: successful operation
