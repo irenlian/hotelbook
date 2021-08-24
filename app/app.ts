@@ -27,6 +27,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 initRoutes(app);
 app.get('/', (req, res) => res.send('Hello world'));
 
+app.use(express.static(__dirname + '/images'));
+
 app.use(joiErrors());
 app.use(errorHandling);
 

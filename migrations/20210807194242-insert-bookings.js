@@ -23,7 +23,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return db.runSql("DELETE FROM bookings WHERE id IN (1, 2, 3, 4);");
+  return db.runSql("DELETE FROM bookings;");
 };
 
 exports._meta = {

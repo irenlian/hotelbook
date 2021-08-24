@@ -21,7 +21,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return db.runSql("DELETE FROM users WHERE id IN (1, 2);");
+  return db.runSql("DELETE FROM users;");
 };
 
 exports._meta = {

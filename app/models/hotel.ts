@@ -1,7 +1,7 @@
 import Room from './room';
-import { getHotels, getHotel } from '../db/hotels';
+import {getHotels, getHotel, getPhotos} from '../db/hotels';
 import { getHotelRooms } from '../db/rooms';
-import Booking from '../models/booking';
+import { BookingType } from '../models/booking';
 import { getHotelBookings } from '../db/bookings';
 
 export type HotelType = {
@@ -11,6 +11,11 @@ export type HotelType = {
   city: string;
 };
 
+type PhotoType = {
+  name: string;
+  main: boolean;
+}
+
 export type FiltersType = {
   from: string;
   to: string;
@@ -19,12 +24,15 @@ export type FiltersType = {
   offset: number;
   limit: number;
   sort: 'ASC' | 'DESC';
+  country?: string;
+  city?: string;
 };
 
 export default class Hotel {
   id: number;
   rooms?: Room[];
-  bookings?: Booking[];
+  bookings?: BookingType[];
+  photos?: PhotoType[];
   name?: string;
   country?: string;
   city?: string;
@@ -46,10 +54,13 @@ export default class Hotel {
     if (!this.rooms) {
       this.rooms = (await getHotelRooms(this.id)).rows;
     }
+    if (!this.photos) {
+      this.photos = (await getPhotos(this.id)).rows;
+    }
     return this;
   }
 
-  async getBookings(): Promise<Booking[] | undefined> {
+  async getBookings(): Promise<BookingType[] | undefined> {
     if (!this.bookings) {
       const result = await getHotelBookings(this.id);
       this.bookings = result.rows;

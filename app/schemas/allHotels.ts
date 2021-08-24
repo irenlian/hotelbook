@@ -11,6 +11,8 @@ export default {
       to: Joi.date().greater(Joi.ref('from')).optional(),
       minPrice: Joi.number().integer().positive().optional(),
       maxPrice: Joi.number().integer().positive().greater(Joi.ref('minPrice')).optional(),
+      country: Joi.string().alphanum().optional(),
+      city: Joi.string().alphanum().optional(),
     })
     .with('from', 'to')
     .with('to', 'from')

@@ -1,7 +1,7 @@
 import { dbQuery } from '../db/init';
 import { FiltersType } from '../models/hotel';
 
-export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort }: FiltersType) => {
+export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort, country, city }: FiltersType) => {
   let query = '';
   if (from && to) {
     query = `
@@ -45,6 +45,7 @@ export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort }:
       ${!minPrice && maxPrice ? `WHERE rooms.price <= ${maxPrice}` : ''}
     `;
   }
+
   const wrapped = `
     SELECT hotels.id, hotels.name, hotels.country, hotels.city 
     FROM hotels
@@ -55,12 +56,24 @@ export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort }:
     ) AS rooms_with_price
     ON hotels.id = rooms_with_price.hotel_id
     WHERE id IN
-    (${query})
+    (${query}) 
+    ${country ? `AND LOWER(country) LIKE '%${country}%' ` : ''}
+    ${city ? `AND LOWER(city) LIKE '%${city}%' ` : ''}
     ORDER BY rooms_with_price.min_price ${sort === 'ASC' ? 'ASC' : 'DESC'}
     LIMIT $1
     OFFSET $2
   `;
-  return dbQuery(wrapped, [limit, offset, ...(from || to ? [from, to] : [])]);
-}
+
+  const withPhoto = `
+  SELECT wrapped.*, photos.name as photo
+  FROM (${wrapped}) as wrapped 
+  LEFT JOIN photos ON wrapped.id=photos.hotel_id
+  WHERE photos.main=TRUE
+  `;
+
+  return dbQuery(withPhoto, [limit, offset, ...(from || to ? [from, to] : [])]);
+};
 
 export const getHotel = (id: number) => dbQuery(`SELECT * FROM hotels WHERE id=${id}`);
+
+export const getPhotos = (id: number) => dbQuery(`SELECT id, name, main FROM photos WHERE hotel_id=${id}`);
