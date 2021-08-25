@@ -158,6 +158,22 @@ paths:
           schema:
             type: string
             default: ASC
+        - name: country
+          in: query
+          description: Find hotels in particular country. Works like regex.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: city
+          in: query
+          description: Find hotels in particular city. Works like regex.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
       responses:
         "200":
           description: successful operation
@@ -256,6 +272,9 @@ components:
           type: string
         city:
           type: string
+        photo:
+          type: string
+          description: Default image
       xml:
         name: Hotel
     FullHotel:
@@ -274,6 +293,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Room'
+        photos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Photo'
     Room:
       type: object
       properties:
@@ -287,6 +310,17 @@ components:
         price:
           type: integer
           format: decimal
+    Photo:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        main:
+          type: boolean
+          description: Sets the photo as default
     UserRegistration:
       type: object
       properties:
