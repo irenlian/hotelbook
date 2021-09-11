@@ -1,5 +1,5 @@
 import Room from './room';
-import {getHotels, getHotel, getPhotos} from '../db/hotels';
+import { getHotels, getHotel, getPhotos, getHotelsCount } from '../db/hotels';
 import { getHotelRooms } from '../db/rooms';
 import { BookingType } from '../models/booking';
 import { getHotelBookings } from '../db/bookings';
@@ -14,7 +14,7 @@ export type HotelType = {
 type PhotoType = {
   name: string;
   main: boolean;
-}
+};
 
 export type FiltersType = {
   from: string;
@@ -69,7 +69,10 @@ export default class Hotel {
   }
 
   static async getAll(filters: FiltersType) {
-    const result = await getHotels(filters);
-    return result.rows;
+    const [result, countResult] = await Promise.all([getHotels(filters), getHotelsCount(filters)]);
+    return {
+      hotels: result?.rows,
+      count: parseInt(countResult?.rows ? countResult.rows[0]?.count : '', 10),
+    };
   }
 }

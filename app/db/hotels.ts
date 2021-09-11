@@ -1,7 +1,13 @@
 import { dbQuery } from '../db/init';
 import { FiltersType } from '../models/hotel';
 
-export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort, country, city }: FiltersType) => {
+type QueryProps = {
+  filters: FiltersType;
+  query: string;
+};
+
+const getQueryForHotelsIdsByDatesAndPrices = ({ filters }: QueryProps) => {
+  const { from, to, minPrice, maxPrice } = filters;
   let query = '';
   if (from && to) {
     query = `
@@ -27,9 +33,9 @@ export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort, c
           FROM rooms 
           JOIN bookings ON bookings.room_id = rooms.id
           WHERE 
-          ($3 BETWEEN bookings.check_in AND bookings.check_out) OR
-          ($4 BETWEEN bookings.check_in AND bookings.check_out) OR
-          (bookings.check_in BETWEEN $3 AND $4)
+          ($1 BETWEEN bookings.check_in AND bookings.check_out) OR
+          ($2 BETWEEN bookings.check_in AND bookings.check_out) OR
+          (bookings.check_in BETWEEN $1 AND $2)
         ) AS bookedRooms
         GROUP by hotel_id
       ) AS bookedHotels
@@ -45,7 +51,11 @@ export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort, c
       ${!minPrice && maxPrice ? `WHERE rooms.price <= ${maxPrice}` : ''}
     `;
   }
+  return { query, filters };
+};
 
+const getQueryForHotelsByLocationSortedByPrice = ({ query, filters }: QueryProps) => {
+  const { sort, country, city } = filters;
   const wrapped = `
     SELECT hotels.id, hotels.name, hotels.country, hotels.city 
     FROM hotels
@@ -60,8 +70,6 @@ export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort, c
     ${country ? `AND LOWER(country) LIKE '%${country}%' ` : ''}
     ${city ? `AND LOWER(city) LIKE '%${city}%' ` : ''}
     ORDER BY rooms_with_price.min_price ${sort === 'ASC' ? 'ASC' : 'DESC'}
-    LIMIT $1
-    OFFSET $2
   `;
 
   const withPhoto = `
@@ -70,8 +78,32 @@ export const getHotels = ({ from, to, minPrice, maxPrice, offset, limit, sort, c
   LEFT JOIN photos ON wrapped.id=photos.hotel_id
   WHERE photos.main=TRUE
   `;
+  return { query: withPhoto, filters };
+};
 
-  return dbQuery(withPhoto, [limit, offset, ...(from || to ? [from, to] : [])]);
+const getQueryByLimit = ({ query, filters }: QueryProps) => {
+  const { offset, limit } = filters;
+  return `${query} LIMIT ${limit} OFFSET ${offset}`;
+};
+
+const getCountQuery = ({ query }: QueryProps) => {
+  return `SELECT COUNT(query.id) FROM (${query}) AS query`;
+};
+
+export const getHotels = (filters: FiltersType) => {
+  const { from, to } = filters;
+  const query = getQueryByLimit(getQueryForHotelsByLocationSortedByPrice(getQueryForHotelsIdsByDatesAndPrices({ filters, query: '' })));
+
+  return dbQuery(query, [...(from || to ? [from, to] : [])]);
+};
+
+export const getHotelsCount = (filters: FiltersType) => {
+  const { from, to } = filters;
+  const query = getCountQuery(
+    getQueryForHotelsByLocationSortedByPrice(getQueryForHotelsIdsByDatesAndPrices({ filters, query: '' })),
+  );
+
+  return dbQuery(query, [...(from || to ? [from, to] : [])]);
 };
 
 export const getHotel = (id: number) => dbQuery(`SELECT * FROM hotels WHERE id=${id}`);

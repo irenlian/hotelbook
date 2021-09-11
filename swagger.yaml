@@ -180,9 +180,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Hotel'
+                $ref: '#/components/schemas/inline_response_200'
         "400":
           description: filters are invalid
   /api/v1/hotel/{hotelId}:
@@ -346,3 +344,12 @@ components:
         checkOut:
           type: string
           format: date
+    inline_response_200:
+      type: object
+      properties:
+        hotels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hotel'
+        count:
+          type: number
