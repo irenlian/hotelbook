@@ -69,7 +69,11 @@ export default class Hotel {
   }
 
   static async getAll(filters: FiltersType) {
-    const [result, countResult] = await Promise.all([getHotels(filters), getHotelsCount(filters)]);
+    const filtersValidated = { ...filters };
+    if (filtersValidated.country) filtersValidated.country = filtersValidated.country.toLowerCase();
+    if (filtersValidated.city) filtersValidated.city = filtersValidated.city.toLowerCase();
+
+    const [result, countResult] = await Promise.all([getHotels(filtersValidated), getHotelsCount(filtersValidated)]);
     return {
       hotels: result?.rows,
       count: parseInt(countResult?.rows ? countResult.rows[0]?.count : '', 10),

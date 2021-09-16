@@ -63,11 +63,12 @@ export default class User {
     }
   }
 
-  async bookRoom({ roomId, checkIn, checkOut }: { roomId: number; checkIn: string; checkOut: string }) {
+  async bookRoom({ roomId, checkIn, checkOut }: { roomId: number; checkIn: string; checkOut: string }): Promise<number | null> {
     if (this.id) {
       const result = await addBooking({ userId: this.id, roomId, checkIn, checkOut });
-      return !!result.rowCount;
+      return result.rows && result.rows[0]?.last_id;
     }
+    return null;
   }
 
   static async getAll() {

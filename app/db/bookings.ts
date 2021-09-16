@@ -2,15 +2,36 @@ import { dbQuery } from '../db/init';
 import { BookingType } from '../models/booking';
 
 export const getHotelBookings = (id: number) =>
-  dbQuery(`SELECT * FROM bookings JOIN rooms ON bookings.room_id=rooms.id WHERE hotel_id=${id}`);
+  dbQuery(`
+    SELECT 
+    bookings.*,
+    rooms.name,
+    rooms.type,
+    rooms.price
+    FROM bookings JOIN rooms ON bookings.room_id=rooms.id 
+    WHERE hotel_id=${id}`
+  );
 
 export const getUserBookings = (id: number) =>
   dbQuery(
-    `SELECT * FROM (SELECT * FROM bookings JOIN rooms ON bookings.room_id=rooms.id WHERE user_id=${id}) AS room_bookings JOIN hotels ON room_bookings.hotel_id=hotels.id`,
+    `
+    SELECT 
+    bookings.*,
+    rooms.hotel_id,
+    rooms.name AS room_name,
+    rooms.type,
+    rooms.price,
+    hotels.name AS hotel_name,
+    hotels.country,
+    hotels.city 
+    FROM bookings 
+    JOIN rooms ON bookings.room_id=rooms.id 
+    JOIN hotels ON rooms.hotel_id=hotels.id
+    WHERE user_id=${id}
+    `,
   );
 
 export const addBooking = (booking: Omit<BookingType, 'id'>) =>
   dbQuery(
-    `INSERT INTO bookings (user_id, room_id, check_in, check_out) 
-    VALUES (${booking.userId}, ${booking.roomId}, CAST('${booking.checkIn}' AS DATE), CAST('${booking.checkOut}' AS DATE))`,
+    `CALL insert_booking(${booking.userId}, ${booking.roomId}, $1, $2)`, [booking.checkIn, booking.checkOut]
   );

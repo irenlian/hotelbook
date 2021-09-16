@@ -56,29 +56,31 @@ const getQueryForHotelsIdsByDatesAndPrices = ({ filters }: QueryProps) => {
 
 const getQueryForHotelsByLocationSortedByPrice = ({ query, filters }: QueryProps) => {
   const { sort, country, city } = filters;
-  const wrapped = `
-    SELECT hotels.id, hotels.name, hotels.country, hotels.city 
-    FROM hotels
-    JOIN
-    (
-      SELECT distinct rooms.hotel_id, MIN(rooms.price) OVER (PARTITION BY rooms.hotel_id) AS min_price
-      FROM rooms
-    ) AS rooms_with_price
-    ON hotels.id = rooms_with_price.hotel_id
-    WHERE id IN
-    (${query}) 
-    ${country ? `AND LOWER(country) LIKE '%${country}%' ` : ''}
-    ${city ? `AND LOWER(city) LIKE '%${city}%' ` : ''}
-    ORDER BY rooms_with_price.min_price ${sort === 'ASC' ? 'ASC' : 'DESC'}
+
+  const withPhotoFiltered = `
+  SELECT hotels.id, hotels.name, hotels.country, hotels.city , photos.name as photo
+  FROM hotels
+  LEFT JOIN photos ON hotels.id=photos.hotel_id
+  WHERE photos.main=TRUE AND hotels.id IN (${query}) 
   `;
 
-  const withPhoto = `
-  SELECT wrapped.*, photos.name as photo
-  FROM (${wrapped}) as wrapped 
-  LEFT JOIN photos ON wrapped.id=photos.hotel_id
-  WHERE photos.main=TRUE
+  const searched = `
+    SELECT filtered_hotels.*
+    FROM (${withPhotoFiltered}) AS filtered_hotels
+    JOIN
+    (
+      SELECT distinct rooms.hotel_id,
+      MIN(rooms.price) OVER (PARTITION BY rooms.hotel_id) AS min_price,
+      MAX(rooms.price) OVER (PARTITION BY rooms.hotel_id) AS max_price
+      FROM rooms
+    ) AS rooms_with_price
+    ON filtered_hotels.id = rooms_with_price.hotel_id
+    ${country ? `AND LOWER(country) LIKE '%${country}%' ` : ''}
+    ${city ? `AND LOWER(city) LIKE '%${city}%' ` : ''}
+    ORDER BY ${sort === 'ASC' ? 'rooms_with_price.min_price ASC' : 'rooms_with_price.max_price DESC'}
   `;
-  return { query: withPhoto, filters };
+
+  return { query: searched, filters };
 };
 
 const getQueryByLimit = ({ query, filters }: QueryProps) => {

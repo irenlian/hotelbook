@@ -27,11 +27,11 @@ export const createBookingController = async (req: express.Request, res: express
     return res.sendStatus(401);
   }
 
-  const result = await user.bookRoom({
+  const id = await user.bookRoom({
     roomId,
     checkIn: req.body.checkIn,
     checkOut: req.body.checkOut,
   });
-  if (!result) return res.sendStatus(400);
-  return res.sendStatus(200);
+  if (!id) return res.sendStatus(400);
+  return res.send({ id });
 };
