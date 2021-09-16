@@ -20,7 +20,11 @@ exports.up = function(db) {
       "LANGUAGE plpgsql\n" +
       "AS $$\n" +
       "BEGIN\n" +
-      "IF NOT EXISTS (\n" +
+      "IF \n" +
+      "CAST(checkIn AS DATE) > NOW() AND CAST(checkOut AS DATE) > CAST(checkIn AS DATE) AND\n" +
+      "EXISTS (\n" +
+      "SELECT id FROM rooms WHERE rooms.id = roomId\n" +
+      ") AND NOT EXISTS (\n" +
       "SELECT bookings.id\n" +
       "FROM bookings \n" +
       "WHERE room_id = roomId AND \n" +

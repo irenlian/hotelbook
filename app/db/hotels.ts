@@ -33,9 +33,9 @@ const getQueryForHotelsIdsByDatesAndPrices = ({ filters }: QueryProps) => {
           FROM rooms 
           JOIN bookings ON bookings.room_id = rooms.id
           WHERE 
-          ($1 BETWEEN bookings.check_in AND bookings.check_out) OR
-          ($2 BETWEEN bookings.check_in AND bookings.check_out) OR
-          (bookings.check_in BETWEEN $1 AND $2)
+          ($1 BETWEEN bookings.check_in AND bookings.check_out - 1) OR
+          ($2 BETWEEN bookings.check_in + 1 AND bookings.check_out) OR
+          (bookings.check_in + 1 BETWEEN $1 AND $2)
         ) AS bookedRooms
         GROUP by hotel_id
       ) AS bookedHotels
