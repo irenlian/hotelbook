@@ -17,7 +17,7 @@ export const login = async (req: express.Request, res: express.Response) => {
 
   const user = new User({ email, password });
   if (!(await user.verifyUser())) {
-    res.statusCode = 404;
+    res.sendStatus(404);
   }
   const accessToken = jwt.sign({ email }, JWT, {
     expiresIn: 24 * 60 * 60 * 1000,
